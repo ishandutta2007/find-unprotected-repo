@@ -119,7 +119,7 @@ if st.button("🚀 Run Security Scan", type="primary", use_container_width=True)
         for step in generator:
             # Update progress bar
             progress_bar.progress(step['current'] / step['total'])
-            status_text.markdown(f"🔍 **Scanning:** `{step['current']}` / `{step['total']}` repositories...")
+            status_text.markdown(f"🔍 **Scanning:** `{step['current']}` / `{step['total']}` repositories... (⚠️ Unprotected: `{unprotected_count}`)")
             
             # If an unprotected repo is found, display it immediately
             if step['repo']:

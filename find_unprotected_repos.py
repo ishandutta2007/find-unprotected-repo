@@ -257,6 +257,9 @@ def main():
             if step['repo']:
                 unprotected_repos.append(step['repo'])
                 pbar.write(step['repo']['html_url'])
+            
+            if pbar:
+                pbar.set_postfix(unprotected=len(unprotected_repos))
         
         if pbar:
             pbar.close()
