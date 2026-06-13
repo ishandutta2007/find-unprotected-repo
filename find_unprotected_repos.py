@@ -68,13 +68,14 @@ def save_cache(cache: Dict):
         print(f"WARNING: Could not save cache: {e}")
 
 
-def get_paginated_results(url: str, per_page: int = 100) -> List[Dict]:
+def get_paginated_results(url: str, per_page: int = 100, silent: bool = False) -> List[Dict]:
     """
     Fetch paginated results from GitHub API with local caching.
     
     Args:
         url: The API endpoint URL
         per_page: Number of results per page
+        silent: If True, suppress cache/API logs
         
     Returns:
         List of all results across all pages
@@ -94,8 +95,12 @@ def get_paginated_results(url: str, per_page: int = 100) -> List[Dict]:
             entry = cache[key]
             if now - entry['timestamp'] < CACHE_TTL:
                 data = entry['data']
+                if not silent:
+                    print(f" [CACHE HIT: {url} (page {page})]", end="")
         
         if data is None:
+            if not silent:
+                print(f" [API CALL: {url} (page {page})]", end="")
             response = requests.get(url, headers=HEADERS, params=params)
             
             if response.status_code != 200:
@@ -139,19 +144,20 @@ def get_user_repositories() -> List[Dict]:
     return repos
 
 
-def get_branch_protections(repo_owner: str, repo_name: str) -> List[Dict]:
+def get_branch_protections(repo_owner: str, repo_name: str, silent: bool = False) -> List[Dict]:
     """
     Fetch all branch protection rules for a repository.
     
     Args:
         repo_owner: Repository owner
         repo_name: Repository name
+        silent: If True, suppress cache/API logs
         
     Returns:
         List of branch protection rules
     """
     url = f"{GITHUB_API_URL}/repos/{repo_owner}/{repo_name}/branches"
-    branches = get_paginated_results(url)
+    branches = get_paginated_results(url, silent=silent)
     
     protected_branches = []
     for branch in branches:
@@ -177,23 +183,26 @@ def find_unprotected_repos() -> Tuple[List[Dict], int]:
         repo_owner = repo['owner']['login']
         repo_name = repo['name']
         
-        print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}...", end=" ")
-        
         # Skip archived repositories
         if repo.get('archived', False):
-            print("SKIPPED (archived)")
+            print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... SKIPPED (archived)")
             continue
         
         try:
-            protected_branches = get_branch_protections(repo_owner, repo_name)
+            # First check silently
+            protected_branches = get_branch_protections(repo_owner, repo_name, silent=True)
             
             if not protected_branches:
-                print("⚠️  UNPROTECTED")
+                # If unprotected, print the line and show cache/API info (will be from cache now)
+                print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}...", end="")
+                get_branch_protections(repo_owner, repo_name, silent=False)
+                print(" ⚠️  UNPROTECTED")
                 unprotected_repos.append(repo)
             else:
-                print(f"✓ Protected ({len(protected_branches)} branch(es) protected)")
+                # If protected, just print the simple status
+                print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... ✓ Protected ({len(protected_branches)} branch(es) protected)")
         except Exception as e:
-            print(f"ERROR ({str(e)})")
+            print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... ERROR ({str(e)})")
     
     return unprotected_repos, len(repos)
 
