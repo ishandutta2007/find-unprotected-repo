@@ -251,13 +251,35 @@ def print_results(unprotected_repos: List[Dict], total_repos: int):
         print("✓ All repositories have branch protection configured!")
 
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
 def main():
     """Main entry point."""
+    parser = argparse.ArgumentParser(description="GitHub Repository Branch Protection Checker")
+    parser.add_argument(
+        "--ignore-forks",
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=True,
+        help="Ignore forked repositories (default: True. Use --ignore-forks False to include forks)"
+    )
+    args = parser.parse_args()
+
     print("GitHub Repository Branch Protection Checker")
     print("="*80 + "\n")
     
     try:
-        unprotected_repos, total_repos = find_unprotected_repos()
+        unprotected_repos, total_repos = find_unprotected_repos(ignore_forks=args.ignore_forks)
         print_results(unprotected_repos, total_repos)
         
         # Exit with appropriate code

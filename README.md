@@ -73,6 +73,17 @@ Simply run the script to start the audit:
 python find_unprotected_repos.py
 ```
 
+### ⚙️ Command Line Options
+
+| Option | Description | Default |
+| :--- | :--- | :--- |
+| `--ignore-forks` | Whether to skip forked repositories. Use `False` to include them. | `True` |
+
+**Example: Include forks in the audit**
+```bash
+python find_unprotected_repos.py --ignore-forks False
+```
+
 ### ⚙️ How it works
 1. **Fetch:** Retrieves all your repositories.
 2. **Filter:** Skips forks (default) and archived repos.
@@ -81,7 +92,6 @@ python find_unprotected_repos.py
 
 ### 🧩 Logic Details
 - **Cache TTL:** `25 hours`. If data is older, a fresh API call is made.
-- **Ignore Forks:** `True` (Default). To change this, modify the `main()` function call.
 
 ---
 
