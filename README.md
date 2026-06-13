@@ -67,13 +67,21 @@ ADMIN_TOKEN=your_github_personal_access_token
 
 ## 🛠️ Usage
 
-Simply run the script to start the audit:
+### CLI Audit
+Simply run the script to start the audit via terminal:
 
 ```bash
 python find_unprotected_repos.py
 ```
 
-### ⚙️ Command Line Options
+### 🌐 Web UI Audit
+Run the interactive Streamlit dashboard for a visual experience with clickable links:
+
+```bash
+streamlit run app.py
+```
+
+### ⚙️ Command Line Options (CLI only)
 
 | Option | Description | Default |
 | :--- | :--- | :--- |
