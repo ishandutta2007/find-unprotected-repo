@@ -32,10 +32,8 @@ from typing import List, Dict, Tuple
 # Load environment variables
 load_dotenv()
 ADMIN_TOKEN = os.getenv('ADMIN_TOKEN')
-DEBUG = False
 
 if not ADMIN_TOKEN:
-    print("ERROR: ADMIN_TOKEN not found in .env file")
     sys.exit(1)
 
 # GitHub API configuration
@@ -72,18 +70,17 @@ def save_cache(cache: Dict):
     try:
         with open(CACHE_FILE, 'w') as f:
             json.dump(cache, f)
-    except IOError as e:
-        print(f"WARNING: Could not save cache: {e}")
+    except IOError:
+        pass
 
 
-def get_paginated_results(url: str, per_page: int = 100, silent: bool = False) -> List[Dict]:
+def get_paginated_results(url: str, per_page: int = 100) -> List[Dict]:
     """
     Fetch paginated results from GitHub API with local caching.
     
     Args:
         url: The API endpoint URL
         per_page: Number of results per page
-        silent: If True, suppress cache/API logs
         
     Returns:
         List of all results across all pages
@@ -103,18 +100,11 @@ def get_paginated_results(url: str, per_page: int = 100, silent: bool = False) -
             entry = cache[key]
             if now - entry['timestamp'] < CACHE_TTL:
                 data = entry['data']
-                if not silent:
-                    print(f" [CACHE HIT: {url} (page {page})]", end="")
         
         if data is None:
-            if not silent:
-                print(f" [API CALL: {url} (page {page})]", end="")
             response = requests.get(url, headers=HEADERS, params=params)
             
             if response.status_code != 200:
-                print(f"ERROR: Failed to fetch from {url}")
-                print(f"Status Code: {response.status_code}")
-                print(f"Response: {response.text}")
                 break
             
             data = response.json()
@@ -148,34 +138,28 @@ def get_user_repositories(ignore_forks: bool = True) -> List[Dict]:
     Returns:
         List of repository objects
     """
-    print(f"Fetching repositories (ignore_forks={ignore_forks})...")
     url = f"{GITHUB_API_URL}/user/repos"
     repos = get_paginated_results(url)
     
     if ignore_forks:
-        original_count = len(repos)
         repos = [r for r in repos if not r.get('fork', False)]
-        print(f"Found {len(repos)} repositories (skipped {original_count - len(repos)} forks)")
-    else:
-        print(f"Found {len(repos)} repositories")
         
     return repos
 
 
-def get_branch_protections(repo_owner: str, repo_name: str, silent: bool = False) -> List[Dict]:
+def get_branch_protections(repo_owner: str, repo_name: str) -> List[Dict]:
     """
     Fetch all branch protection rules for a repository.
     
     Args:
         repo_owner: Repository owner
         repo_name: Repository name
-        silent: If True, suppress cache/API logs
         
     Returns:
         List of branch protection rules
     """
     url = f"{GITHUB_API_URL}/repos/{repo_owner}/{repo_name}/branches"
-    branches = get_paginated_results(url, silent=silent)
+    branches = get_paginated_results(url)
     
     protected_branches = []
     for branch in branches:
@@ -185,7 +169,7 @@ def get_branch_protections(repo_owner: str, repo_name: str, silent: bool = False
     return protected_branches
 
 
-def find_unprotected_repos(ignore_forks: bool = True) -> Tuple[List[Dict], int]:
+def find_unprotected_repos(ignore_forks: bool = True) -> List[Dict]:
     """
     Find all repositories without any branch protection.
     
@@ -193,64 +177,28 @@ def find_unprotected_repos(ignore_forks: bool = True) -> Tuple[List[Dict], int]:
         ignore_forks: If True, skip forked repositories
         
     Returns:
-        Tuple containing (list of unprotected repos, total repos checked)
+        List of unprotected repos
     """
     repos = get_user_repositories(ignore_forks=ignore_forks)
     unprotected_repos = []
     
-    print("\nChecking branch protection for each repository...\n")
-    
-    for i, repo in enumerate(repos, 1):
+    for repo in repos:
         repo_owner = repo['owner']['login']
         repo_name = repo['name']
         
         # Skip archived repositories
         if repo.get('archived', False):
-            print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... SKIPPED (archived)")
             continue
         
         try:
-            # First check silently
-            protected_branches = get_branch_protections(repo_owner, repo_name, silent=True)
+            protected_branches = get_branch_protections(repo_owner, repo_name)
             
             if not protected_branches:
-                # If unprotected, print the line and show cache/API info (will be from cache now)
-                print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}...", end="")
-                get_branch_protections(repo_owner, repo_name, silent=False)
-                print(" ⚠️  UNPROTECTED")
                 unprotected_repos.append(repo)
-            else:
-                # If protected, just print the simple status
-                if DEBUG:
-                    print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... ✓ Protected ({len(protected_branches)} branch(es) protected)")
-        except Exception as e:
-            print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... ERROR ({str(e)})")
+        except Exception:
+            pass
     
-    return unprotected_repos, len(repos)
-
-
-def print_results(unprotected_repos: List[Dict], total_repos: int):
-    """
-    Print the results in a formatted way.
-    
-    Args:
-        unprotected_repos: List of unprotected repositories
-        total_repos: Total number of repositories checked
-    """
-    print("\n" + "="*80)
-    print(f"SUMMARY: {len(unprotected_repos)}/{total_repos} repositories are UNPROTECTED")
-    print("="*80 + "\n")
-    
-    if unprotected_repos:
-        print("Unprotected Repositories:\n")
-        for i, repo in enumerate(unprotected_repos, 1):
-            print(f"{i}. {repo['full_name']}")
-            print(f"   URL: {repo['html_url']}")
-            print(f"   Private: {repo['private']}")
-            print(f"   Default Branch: {repo['default_branch']}")
-            print()
-    else:
-        print("✓ All repositories have branch protection configured!")
+    return unprotected_repos
 
 
 def str2bool(v):
@@ -276,27 +224,22 @@ def main():
         help="Ignore forked repositories (default: True. Use --ignore-forks False to include forks)"
     )
     args = parser.parse_args()
-
-    print("GitHub Repository Branch Protection Checker")
-    print("="*80 + "\n")
     
     try:
-        unprotected_repos, total_repos = find_unprotected_repos(ignore_forks=args.ignore_forks)
-        print_results(unprotected_repos, total_repos)
+        unprotected_repos = find_unprotected_repos(ignore_forks=args.ignore_forks)
         
+        for repo in unprotected_repos:
+            print(repo['html_url'])
+            
         # Exit with appropriate code
         if unprotected_repos:
-            print(f"\n⚠️  Action Required: {len(unprotected_repos)} repository/repositories need branch protection!")
             sys.exit(1)
         else:
-            print("\n✓ All repositories are protected!")
             sys.exit(0)
             
     except KeyboardInterrupt:
-        print("\n\nInterrupted by user")
         sys.exit(130)
-    except Exception as e:
-        print(f"\n\nERROR: {str(e)}")
+    except Exception:
         sys.exit(1)
 
 
