@@ -54,7 +54,7 @@ git clone https://github.com/ishandutta2007/find-unprotected-repo.git
 cd find-unprotected-repo
 
 # Install dependencies
-pip install requests python-dotenv
+pip install requests python-dotenv tqdm
 ```
 
 ### 3. Configuration
@@ -98,17 +98,9 @@ python find_unprotected_repos.py --ignore-forks False
 ## 📊 Sample Output
 
 ```text
-GitHub Repository Branch Protection Checker
-================================================================================
-
-Fetching repositories (ignore_forks=True)...
- [CACHE HIT: https://api.github.com/user/repos (page 1)]
-Found 150 repositories (skipped 45 forks)
-
-Checking branch protection for each repository...
-
-[1/150] Checking user/my-cool-project... ✓ Protected (1 branch(es) protected)
-[2/150] Checking user/unsecured-repo... [API CALL: https://api.github.com/repos/user/unsecured-repo/branches (page 1)] ⚠️  UNPROTECTED
+Scanning repositories: 100%|██████████| 150/150 [00:45<00:00,  3.33repo/s]
+https://github.com/user/unsecured-repo
+https://github.com/user/another-unprotected-project
 ```
 
 ---

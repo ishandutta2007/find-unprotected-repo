@@ -16,6 +16,7 @@ Usage:
 Requirements:
     - requests library: pip install requests
     - python-dotenv library: pip install python-dotenv
+    - tqdm library: pip install tqdm
     - .env file with ADMIN_TOKEN set
 """
 
@@ -25,6 +26,7 @@ import json
 import time
 import hashlib
 import argparse
+from tqdm import tqdm
 from dotenv import load_dotenv
 import requests
 from typing import List, Dict, Tuple
@@ -182,7 +184,7 @@ def find_unprotected_repos(ignore_forks: bool = True) -> List[Dict]:
     repos = get_user_repositories(ignore_forks=ignore_forks)
     unprotected_repos = []
     
-    for repo in repos:
+    for repo in tqdm(repos, desc="Scanning repositories", unit="repo", file=sys.stderr):
         repo_owner = repo['owner']['login']
         repo_name = repo['name']
         
