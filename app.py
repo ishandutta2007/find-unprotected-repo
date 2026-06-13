@@ -42,16 +42,9 @@ if st.button("🚀 Run Scan"):
                 unprotected_count += 1
                 repo = step['repo']
                 with results_container:
-                    with st.container():
-                        col1, col2 = st.columns([3, 1])
-                        with col1:
-                            st.markdown(f"### 📦 [{repo['full_name']}]({repo['html_url']})")
-                            # st.link_button("🌐 Visit Repo", repo['html_url'])
-                        with col2:
-                            st.write("") # Spacer
-                            st.write("") # Spacer
-                            st.write(f"**Default Branch:** `{repo['default_branch']}`")
-                        st.divider()
+                    col1, col2 = st.columns([4, 1])
+                    col1.markdown(f"**📦 [{repo['full_name']}]({repo['html_url']})**")
+                    col2.markdown(f"branch: `{repo['default_branch']}`")
         
         if unprotected_count > 0:
             st.success(f"✅ Audit Complete! Found {unprotected_count} unprotected repository/repositories.")
