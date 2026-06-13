@@ -32,6 +32,7 @@ from typing import List, Dict, Tuple
 # Load environment variables
 load_dotenv()
 ADMIN_TOKEN = os.getenv('ADMIN_TOKEN')
+DEBUG = False
 
 if not ADMIN_TOKEN:
     print("ERROR: ADMIN_TOKEN not found in .env file")
@@ -220,7 +221,8 @@ def find_unprotected_repos(ignore_forks: bool = True) -> Tuple[List[Dict], int]:
                 unprotected_repos.append(repo)
             else:
                 # If protected, just print the simple status
-                print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... ✓ Protected ({len(protected_branches)} branch(es) protected)")
+                if DEBUG:
+                    print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... ✓ Protected ({len(protected_branches)} branch(es) protected)")
         except Exception as e:
             print(f"[{i}/{len(repos)}] Checking {repo_owner}/{repo_name}... ERROR ({str(e)})")
     
