@@ -5,11 +5,17 @@ Find all GitHub repositories that do not have any branch protection rules.
 This script uses the GitHub API to identify repositories owned by the authenticated user
 that do not have any branch protection configured on any of their branches.
 
+Features:
+    - Intelligent local caching (25-hour TTL) for API responses.
+    - Automatic filtering of forked repositories (default: True).
+    - Clear console logging for Cache vs. API fetching.
+
 Usage:
     python find_unprotected_repos.py
 
 Requirements:
     - requests library: pip install requests
+    - python-dotenv library: pip install python-dotenv
     - .env file with ADMIN_TOKEN set
 """
 
