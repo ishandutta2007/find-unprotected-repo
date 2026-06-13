@@ -130,17 +130,27 @@ def get_paginated_results(url: str, per_page: int = 100, silent: bool = False) -
     return results
 
 
-def get_user_repositories() -> List[Dict]:
+def get_user_repositories(ignore_forks: bool = True) -> List[Dict]:
     """
     Fetch all repositories for the authenticated user.
     
+    Args:
+        ignore_forks: If True, skip forked repositories
+        
     Returns:
         List of repository objects
     """
-    print("Fetching repositories...")
+    print(f"Fetching repositories (ignore_forks={ignore_forks})...")
     url = f"{GITHUB_API_URL}/user/repos"
     repos = get_paginated_results(url)
-    print(f"Found {len(repos)} repositories")
+    
+    if ignore_forks:
+        original_count = len(repos)
+        repos = [r for r in repos if not r.get('fork', False)]
+        print(f"Found {len(repos)} repositories (skipped {original_count - len(repos)} forks)")
+    else:
+        print(f"Found {len(repos)} repositories")
+        
     return repos
 
 
@@ -167,14 +177,17 @@ def get_branch_protections(repo_owner: str, repo_name: str, silent: bool = False
     return protected_branches
 
 
-def find_unprotected_repos() -> Tuple[List[Dict], int]:
+def find_unprotected_repos(ignore_forks: bool = True) -> Tuple[List[Dict], int]:
     """
     Find all repositories without any branch protection.
     
+    Args:
+        ignore_forks: If True, skip forked repositories
+        
     Returns:
         Tuple containing (list of unprotected repos, total repos checked)
     """
-    repos = get_user_repositories()
+    repos = get_user_repositories(ignore_forks=ignore_forks)
     unprotected_repos = []
     
     print("\nChecking branch protection for each repository...\n")
