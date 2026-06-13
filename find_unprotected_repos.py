@@ -171,36 +171,39 @@ def get_branch_protections(repo_owner: str, repo_name: str) -> List[Dict]:
     return protected_branches
 
 
-def find_unprotected_repos(ignore_forks: bool = True) -> List[Dict]:
+def find_unprotected_repos(ignore_forks: bool = True):
     """
-    Find all repositories without any branch protection.
+    Find all repositories without any branch protection (Generator).
     
     Args:
         ignore_forks: If True, skip forked repositories
         
-    Returns:
-        List of unprotected repos
+    Yields:
+        Dict: {"current": int, "total": int, "repo": Optional[Dict]}
     """
     repos = get_user_repositories(ignore_forks=ignore_forks)
-    unprotected_repos = []
+    total = len(repos)
     
-    for repo in tqdm(repos, desc="Scanning repositories", unit="repo", file=sys.stderr):
+    for i, repo in enumerate(repos, 1):
         repo_owner = repo['owner']['login']
         repo_name = repo['name']
         
+        unprotected_repo = None
         # Skip archived repositories
-        if repo.get('archived', False):
-            continue
+        if not repo.get('archived', False):
+            try:
+                protected_branches = get_branch_protections(repo_owner, repo_name)
+                
+                if not protected_branches:
+                    unprotected_repo = repo
+            except Exception:
+                pass
         
-        try:
-            protected_branches = get_branch_protections(repo_owner, repo_name)
-            
-            if not protected_branches:
-                unprotected_repos.append(repo)
-        except Exception:
-            pass
-    
-    return unprotected_repos
+        yield {
+            "current": i,
+            "total": total,
+            "repo": unprotected_repo
+        }
 
 
 def str2bool(v):
@@ -227,11 +230,23 @@ def main():
     )
     args = parser.parse_args()
     
+    unprotected_repos = []
     try:
-        unprotected_repos = find_unprotected_repos(ignore_forks=args.ignore_forks)
+        # We need to get the generator to start it
+        generator = find_unprotected_repos(ignore_forks=args.ignore_forks)
         
-        for repo in unprotected_repos:
-            print(repo['html_url'])
+        pbar = None
+        for step in generator:
+            if pbar is None:
+                pbar = tqdm(total=step['total'], desc="Scanning repositories", unit="repo", file=sys.stderr)
+            
+            pbar.update(1)
+            if step['repo']:
+                unprotected_repos.append(step['repo'])
+                pbar.write(step['repo']['html_url'])
+        
+        if pbar:
+            pbar.close()
             
         # Exit with appropriate code
         if unprotected_repos:
