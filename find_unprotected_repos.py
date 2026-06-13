@@ -15,6 +15,9 @@ Requirements:
 
 import os
 import sys
+import json
+import time
+import hashlib
 from dotenv import load_dotenv
 import requests
 from typing import List, Dict, Tuple
@@ -34,10 +37,40 @@ HEADERS = {
     "Accept": "application/vnd.github.v3+json"
 }
 
+# Caching configuration
+CACHE_FILE = "api_cache.json"
+CACHE_TTL = 25 * 3600  # 25 hours in seconds
+
+
+def get_cache_key(url: str, params: Dict) -> str:
+    """Generate a unique cache key for a URL and parameters."""
+    key_str = f"{url}_{json.dumps(params, sort_keys=True)}"
+    return hashlib.md5(key_str.encode()).hexdigest()
+
+
+def load_cache() -> Dict:
+    """Load the cache from the local file."""
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, 'r') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError):
+            return {}
+    return {}
+
+
+def save_cache(cache: Dict):
+    """Save the cache to the local file."""
+    try:
+        with open(CACHE_FILE, 'w') as f:
+            json.dump(cache, f)
+    except IOError as e:
+        print(f"WARNING: Could not save cache: {e}")
+
 
 def get_paginated_results(url: str, per_page: int = 100) -> List[Dict]:
     """
-    Fetch paginated results from GitHub API.
+    Fetch paginated results from GitHub API with local caching.
     
     Args:
         url: The API endpoint URL
@@ -48,18 +81,37 @@ def get_paginated_results(url: str, per_page: int = 100) -> List[Dict]:
     """
     results = []
     page = 1
+    cache = load_cache()
+    now = time.time()
+    cache_updated = False
     
     while True:
         params = {"per_page": per_page, "page": page}
-        response = requests.get(url, headers=HEADERS, params=params)
+        key = get_cache_key(url, params)
         
-        if response.status_code != 200:
-            print(f"ERROR: Failed to fetch from {url}")
-            print(f"Status Code: {response.status_code}")
-            print(f"Response: {response.text}")
-            break
+        data = None
+        if key in cache:
+            entry = cache[key]
+            if now - entry['timestamp'] < CACHE_TTL:
+                data = entry['data']
         
-        data = response.json()
+        if data is None:
+            response = requests.get(url, headers=HEADERS, params=params)
+            
+            if response.status_code != 200:
+                print(f"ERROR: Failed to fetch from {url}")
+                print(f"Status Code: {response.status_code}")
+                print(f"Response: {response.text}")
+                break
+            
+            data = response.json()
+            
+            # Update cache
+            cache[key] = {
+                'timestamp': now,
+                'data': data
+            }
+            cache_updated = True
         
         if not data:
             break
@@ -67,6 +119,9 @@ def get_paginated_results(url: str, per_page: int = 100) -> List[Dict]:
         results.extend(data)
         page += 1
     
+    if cache_updated:
+        save_cache(cache)
+        
     return results
 
 
