@@ -50,7 +50,7 @@
 ### 2. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/find-unprotected-repo.git
+git clone https://github.com/ishandutta2007/find-unprotected-repo.git
 cd find-unprotected-repo
 
 # Install dependencies
