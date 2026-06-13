@@ -86,10 +86,11 @@ streamlit run app.py
 | Option | Description | Default |
 | :--- | :--- | :--- |
 | `--ignore-forks` | Whether to skip forked repositories. Use `False` to include them. | `True` |
+| `--ignore-private` | Whether to skip private repositories. Use `False` to include them. | `True` |
 
-**Example: Include forks in the audit**
+**Example: Include forks and private repos in the audit**
 ```bash
-python find_unprotected_repos.py --ignore-forks False
+python find_unprotected_repos.py --ignore-forks False --ignore-private False
 ```
 
 ### ⚙️ How it works

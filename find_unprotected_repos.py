@@ -130,12 +130,13 @@ def get_paginated_results(url: str, per_page: int = 100) -> List[Dict]:
     return results
 
 
-def get_user_repositories(ignore_forks: bool = True) -> List[Dict]:
+def get_user_repositories(ignore_forks: bool = True, ignore_private: bool = True) -> List[Dict]:
     """
     Fetch all repositories for the authenticated user.
     
     Args:
         ignore_forks: If True, skip forked repositories
+        ignore_private: If True, skip private repositories
         
     Returns:
         List of repository objects
@@ -145,6 +146,9 @@ def get_user_repositories(ignore_forks: bool = True) -> List[Dict]:
     
     if ignore_forks:
         repos = [r for r in repos if not r.get('fork', False)]
+    
+    if ignore_private:
+        repos = [r for r in repos if not r.get('private', False)]
         
     return repos
 
@@ -171,17 +175,18 @@ def get_branch_protections(repo_owner: str, repo_name: str) -> List[Dict]:
     return protected_branches
 
 
-def find_unprotected_repos(ignore_forks: bool = True):
+def find_unprotected_repos(ignore_forks: bool = True, ignore_private: bool = True):
     """
     Find all repositories without any branch protection (Generator).
     
     Args:
         ignore_forks: If True, skip forked repositories
+        ignore_private: If True, skip private repositories
         
     Yields:
         Dict: {"current": int, "total": int, "repo": Optional[Dict]}
     """
-    repos = get_user_repositories(ignore_forks=ignore_forks)
+    repos = get_user_repositories(ignore_forks=ignore_forks, ignore_private=ignore_private)
     total = len(repos)
     
     for i, repo in enumerate(repos, 1):
@@ -228,12 +233,20 @@ def main():
         default=True,
         help="Ignore forked repositories (default: True. Use --ignore-forks False to include forks)"
     )
+    parser.add_argument(
+        "--ignore-private",
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=True,
+        help="Ignore private repositories (default: True. Use --ignore-private False to include private repos)"
+    )
     args = parser.parse_args()
     
     unprotected_repos = []
     try:
         # We need to get the generator to start it
-        generator = find_unprotected_repos(ignore_forks=args.ignore_forks)
+        generator = find_unprotected_repos(ignore_forks=args.ignore_forks, ignore_private=args.ignore_private)
         
         pbar = None
         for step in generator:
