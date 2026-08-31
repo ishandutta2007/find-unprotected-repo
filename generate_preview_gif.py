@@ -149,7 +149,7 @@ for f in range(NUM_FRAMES):
     draw.text((text_x, 86), "Find Unprotected Repos", font=font_title, fill=(88, 166, 255))
     
     # Subtitle
-    draw.text((text_x, 118), "Automated GitHub Branch Security & Protection Auditor", font=font_sub, fill=(139, 148, 158))
+    draw.text((text_x, 118), "Automated GitHub Branch Security Auditor", font=font_sub, fill=(139, 148, 158))
     
     # Feature Badges
     pills = ["⚡ 25h Cache", "🍴 Fork Filter", "🔍 Deep Audit", "📟 CLI + UI"]
