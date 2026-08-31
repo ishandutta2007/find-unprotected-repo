@@ -1,5 +1,9 @@
 <div align="center">
 
+<a href="https://github.com/ishandutta2007/find-unprotected-repo">
+  <img src="assets/banner.svg" alt="Find Unprotected Repos Banner" width="100%" />
+</a>
+
 # 🛡️ GitHub Repository Branch Protection Checker
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,22 +12,6 @@
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
 
 ### *Automate security audits for your GitHub repositories in seconds.*
-
----
-
-<!-- Simple SVG Banner -->
-<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#0d1117;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#161b22;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <rect width="800" height="200" rx="10" fill="url(#grad1)" />
-  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial" font-size="32" fill="#58a6ff" font-weight="bold">🛡️ Find Unprotected Repos</text>
-  <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial" font-size="16" fill="#8b949e">Intelligent Caching • Fork Filtering • Security Auditing</text>
-  <path d="M350 140 L450 140" stroke="#238636" stroke-width="4" stroke-linecap="round" />
-</svg>
 
 </div>
 
