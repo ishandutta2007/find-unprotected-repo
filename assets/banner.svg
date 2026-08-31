@@ -1,256 +1,186 @@
-<svg width="100%" height="100%" viewBox="0 0 1200 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" height="100%" viewBox="0 0 1000 340" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Gradients -->
+    <!-- Background Gradients -->
     <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="0%" stop-color="#080c14" />
       <stop offset="50%" stop-color="#0d1117" />
-      <stop offset="100%" stop-color="#161b22" />
+      <stop offset="100%" stop-color="#141a23" />
     </linearGradient>
 
+    <!-- Animated Border Gradient -->
     <linearGradient id="border-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#58a6ff" stop-opacity="0.8">
-        <animate attributeName="stop-color" values="#58a6ff;#238636;#58a6ff" dur="8s" repeatCount="indefinite" />
+      <stop offset="0%" stop-color="#58a6ff">
+        <animate attributeName="stop-color" values="#58a6ff;#238636;#1f6feb;#58a6ff" dur="10s" repeatCount="indefinite" />
       </stop>
-      <stop offset="50%" stop-color="#1f6feb" stop-opacity="0.2" />
-      <stop offset="100%" stop-color="#238636" stop-opacity="0.8">
-        <animate attributeName="stop-color" values="#238636;#58a6ff;#238636" dur="8s" repeatCount="indefinite" />
+      <stop offset="50%" stop-color="#1f6feb" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#238636">
+        <animate attributeName="stop-color" values="#238636;#58a6ff;#238636" dur="10s" repeatCount="indefinite" />
       </stop>
     </linearGradient>
 
+    <!-- Title Gradient -->
     <linearGradient id="title-grad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#58a6ff" />
       <stop offset="50%" stop-color="#79c0ff" />
       <stop offset="100%" stop-color="#56d364" />
     </linearGradient>
 
+    <!-- Shield Gradient -->
     <linearGradient id="shield-grad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#58a6ff" />
-      <stop offset="50%" stop-color="#1f6feb" />
       <stop offset="100%" stop-color="#238636" />
     </linearGradient>
 
-    <linearGradient id="card-grad-pass" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#161b22" stop-opacity="0.95" />
-      <stop offset="100%" stop-color="#0e1713" stop-opacity="0.95" />
-    </linearGradient>
-
-    <linearGradient id="card-grad-alert" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1c1417" stop-opacity="0.95" />
-      <stop offset="100%" stop-color="#0d1117" stop-opacity="0.95" />
-    </linearGradient>
-
+    <!-- Laser Scanner Gradient -->
     <linearGradient id="scan-grad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#58a6ff" stop-opacity="0" />
-      <stop offset="50%" stop-color="#58a6ff" stop-opacity="0.22" />
+      <stop offset="50%" stop-color="#58a6ff" stop-opacity="0.35" />
       <stop offset="100%" stop-color="#58a6ff" stop-opacity="0" />
     </linearGradient>
 
-    <radialGradient id="glow-grad" cx="50%" cy="50%" r="50%">
+    <!-- Radial Glows -->
+    <radialGradient id="center-glow" cx="50%" cy="40%" r="50%">
       <stop offset="0%" stop-color="#388bfd" stop-opacity="0.22" />
       <stop offset="100%" stop-color="#388bfd" stop-opacity="0" />
     </radialGradient>
 
-    <radialGradient id="shield-glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#58a6ff" stop-opacity="0.6" />
-      <stop offset="100%" stop-color="#58a6ff" stop-opacity="0" />
-    </radialGradient>
-
-    <!-- Filters -->
+    <!-- Soft Filter -->
     <filter id="soft-glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feGaussianBlur stdDeviation="4" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
 
-    <!-- Cyber Grid Pattern -->
-    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#30363d" stroke-width="0.5" stroke-opacity="0.35" />
+    <!-- Background Grid -->
+    <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+      <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#30363d" stroke-width="0.5" stroke-opacity="0.4" />
     </pattern>
   </defs>
 
   <style>
-    @keyframes pulse {
+    @keyframes pulseGlow {
       0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 10px #58a6ff); }
+      50% { transform: scale(1.08); opacity: 1; filter: drop-shadow(0 0 14px #58a6ff); }
     }
-    @keyframes scan {
-      0% { transform: translateX(-1200px); }
-      100% { transform: translateX(1200px); }
-    }
-    @keyframes float1 {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-6px); }
-    }
-    @keyframes float2 {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(6px); }
+    @keyframes sweep {
+      0% { transform: translateX(-1000px); }
+      100% { transform: translateX(1000px); }
     }
     @keyframes blink {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.25; }
+      50% { opacity: 0.2; }
     }
-    .pulse-shield {
-      animation: pulse 4s ease-in-out infinite;
-      transform-origin: 110px 210px;
+    @keyframes floatParticle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
     }
-    .scanner-line {
-      animation: scan 6s linear infinite;
+    .scanner {
+      animation: sweep 5s linear infinite;
     }
-    .floating-card-1 {
-      animation: float1 5s ease-in-out infinite;
+    .shield-pulse {
+      animation: pulseGlow 4s ease-in-out infinite;
+      transform-origin: 500px 58px;
     }
-    .floating-card-2 {
-      animation: float2 5.5s ease-in-out infinite;
-    }
-    .blinking-dot {
+    .blinking {
       animation: blink 2s ease-in-out infinite;
+    }
+    .particle {
+      animation: floatParticle 4s ease-in-out infinite;
     }
   </style>
 
-  <!-- Background Layer -->
-  <rect width="1200" height="420" rx="16" fill="url(#bg-grad)" />
-  <rect width="1200" height="420" rx="16" fill="url(#grid)" />
+  <!-- Background Base -->
+  <rect width="1000" height="340" rx="14" fill="url(#bg-grad)" />
+  <rect width="1000" height="340" rx="14" fill="url(#grid)" />
 
-  <!-- Ambient Glows -->
-  <circle cx="110" cy="210" r="140" fill="url(#glow-grad)" />
-  <circle cx="1000" cy="200" r="180" fill="url(#glow-grad)" opacity="0.6" />
+  <!-- Ambient Center Glow -->
+  <circle cx="500" cy="150" r="280" fill="url(#center-glow)" />
 
-  <!-- Scanning Sweep Effect -->
-  <g class="scanner-line">
-    <rect x="0" y="0" width="300" height="420" fill="url(#scan-grad)" />
-    <line x1="150" y1="0" x2="150" y2="420" stroke="#58a6ff" stroke-width="1.5" stroke-opacity="0.5" />
+  <!-- Scanning Sweep Laser -->
+  <g class="scanner">
+    <rect x="0" y="0" width="240" height="340" fill="url(#scan-grad)" />
+    <line x1="120" y1="0" x2="120" y2="340" stroke="#58a6ff" stroke-width="1.5" stroke-opacity="0.6" />
   </g>
 
-  <!-- Border Outline -->
-  <rect x="1.5" y="1.5" width="1197" height="417" rx="15" fill="none" stroke="url(#border-grad)" stroke-width="2" />
+  <!-- Glowing Outer Border -->
+  <rect x="1.5" y="1.5" width="997" height="337" rx="13" fill="none" stroke="url(#border-grad)" stroke-width="2" />
 
-  <!-- ================= LEFT: SECURITY SHIELD & RADAR (cx: 110) ================= -->
-  <g class="pulse-shield">
-    <!-- Rotating Radar Rings -->
-    <circle cx="110" cy="210" r="75" fill="none" stroke="#1f6feb" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.5">
-      <animateTransform attributeName="transform" type="rotate" from="0 110 210" to="360 110 210" dur="20s" repeatCount="indefinite" />
+  <!-- Top Center: Shield Emblem with Radar Pulse -->
+  <g class="shield-pulse">
+    <!-- Rotating radar ring -->
+    <circle cx="500" cy="58" r="38" fill="none" stroke="#1f6feb" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" from="0 500 58" to="360 500 58" dur="16s" repeatCount="indefinite" />
     </circle>
-    <circle cx="110" cy="210" r="58" fill="none" stroke="#238636" stroke-width="1" stroke-dasharray="4 6" opacity="0.6">
-      <animateTransform attributeName="transform" type="rotate" from="360 110 210" to="0 110 210" dur="14s" repeatCount="indefinite" />
-    </circle>
-
-    <!-- Shield Background & Glow -->
-    <circle cx="110" cy="210" r="45" fill="url(#shield-glow)" />
-    <path d="M110 165 L145 182 V213 C145 237 110 254 110 254 C110 254 75 237 75 213 V182 Z" fill="#0d1117" stroke="url(#shield-grad)" stroke-width="3.5" stroke-linejoin="round" filter="url(#soft-glow)" />
+    
+    <!-- Shield Path -->
+    <path d="M500 32 L524 44 V65 C524 81 500 93 500 93 C500 93 476 81 476 65 V44 Z" fill="#0d1117" stroke="url(#shield-grad)" stroke-width="2.8" stroke-linejoin="round" filter="url(#soft-glow)" />
 
     <!-- Lock Emblem -->
-    <rect x="98" y="206" width="24" height="19" rx="3" fill="#58a6ff" />
-    <path d="M103 206 V198 C103 194 106 191 110 191 C114 191 117 194 117 198 V206" fill="none" stroke="#58a6ff" stroke-width="2.8" stroke-linecap="round" />
-    <circle cx="110" cy="214" r="2.2" fill="#0d1117" />
-    <path d="M110 216.5 V220" stroke="#0d1117" stroke-width="2" stroke-linecap="round" />
+    <rect x="492" y="58" width="16" height="13" rx="2" fill="#58a6ff" />
+    <path d="M495 58 V52 C495 49.5 497.2 47.5 500 47.5 C502.8 47.5 505 49.5 505 52 V58" fill="none" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" />
+    <circle cx="500" cy="63.5" r="1.5" fill="#0d1117" />
+    <path d="M500 65 V67.5" stroke="#0d1117" stroke-width="1.5" stroke-linecap="round" />
 
-    <!-- Status indicator badge on shield -->
-    <circle cx="138" cy="182" r="7" fill="#238636" stroke="#0d1117" stroke-width="2" />
-    <path d="M135 182 L137.5 184.5 L141 179.5" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Active Shield Green Checkpoint -->
+    <circle cx="518" cy="44" r="5" fill="#238636" stroke="#0d1117" stroke-width="1.5" />
+    <path d="M516 44 L517.5 45.5 L520.5 42" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
   </g>
 
-  <!-- ================= CENTER: MAIN DETAILS MOVED RIGHTWARDS (x: 290 - 770) ================= -->
-  <!-- Top Category / Protocol Pill -->
-  <g transform="translate(290, 52)">
-    <rect width="250" height="26" rx="13" fill="#161b22" stroke="#30363d" stroke-width="1" />
-    <circle cx="13" cy="13" r="4.5" fill="#3fb950" class="blinking-dot" />
-    <text x="26" y="17.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#7ee787" letter-spacing="0.8">SECURITY AUDIT ENGINE</text>
-    <rect x="184" y="4" width="58" height="18" rx="9" fill="#238636" fill-opacity="0.3" />
-    <text x="213" y="16.5" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#3fb950">ACTIVE</text>
+  <!-- Top Status Pill (Centered) -->
+  <g transform="translate(375, 108)">
+    <rect width="250" height="24" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1" />
+    <circle cx="12" cy="12" r="4" fill="#3fb950" class="blinking" />
+    <text x="24" y="15.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#7ee787" letter-spacing="1">SECURITY AUDIT ENGINE</text>
+    <rect x="184" y="3" width="58" height="18" rx="9" fill="#238636" fill-opacity="0.3" />
+    <text x="213" y="15.5" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="9" font-weight="800" fill="#3fb950">ACTIVE</text>
   </g>
 
-  <!-- Main Title -->
-  <g transform="translate(290, 122)">
-    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, Helvetica, Arial, sans-serif" font-size="36" font-weight="800" fill="url(#title-grad)" letter-spacing="-0.5">
-      Find Unprotected Repos
-    </text>
-  </g>
+  <!-- Main Title (Centered) -->
+  <text x="500" y="172" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="800" fill="url(#title-grad)" letter-spacing="-0.5">
+    Find Unprotected Repos
+  </text>
 
-  <!-- Subtitle -->
-  <g transform="translate(290, 158)">
-    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8b949e">
-      Automated GitHub branch protection &amp; security scanner.
-    </text>
-  </g>
+  <!-- Subtitle (Centered) -->
+  <text x="500" y="202" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="400" fill="#8b949e">
+    Automate GitHub branch protection audits &amp; repository security posture scanner in seconds.
+  </text>
 
-  <!-- Feature Pills (Clean 2-row layout to prevent horizontal crowding) -->
-  <g transform="translate(290, 194)">
-    <!-- Row 1 -->
+  <!-- Feature Pills Row (Centered: total width 580, starts at x = 210) -->
+  <g transform="translate(210, 224)">
+    <!-- Pill 1 -->
     <g transform="translate(0, 0)">
-      <rect width="130" height="30" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
-      <text x="12" y="19.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#e6edf3">⚡ 25h Cache</text>
+      <rect width="130" height="28" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
+      <text x="65" y="18" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="500" fill="#e6edf3">⚡ 25h Cache</text>
     </g>
-    <g transform="translate(140, 0)">
-      <rect width="135" height="30" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
-      <text x="12" y="19.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#e6edf3">🍴 Fork Filter</text>
+    <!-- Pill 2 -->
+    <g transform="translate(142, 0)">
+      <rect width="135" height="28" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
+      <text x="67.5" y="18" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="500" fill="#e6edf3">🍴 Fork Filtering</text>
     </g>
-    <g transform="translate(285, 0)">
-      <rect width="135" height="30" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
-      <text x="12" y="19.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#e6edf3">🔍 Deep Audit</text>
+    <!-- Pill 3 -->
+    <g transform="translate(289, 0)">
+      <rect width="135" height="28" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
+      <text x="67.5" y="18" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="500" fill="#e6edf3">🔍 Deep Audit</text>
     </g>
-    
-    <!-- Row 2 -->
-    <g transform="translate(0, 38)">
-      <rect width="145" height="30" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
-      <text x="12" y="19.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#e6edf3">📟 CLI + Web UI</text>
-    </g>
-    <g transform="translate(155, 38)">
-      <rect width="195" height="30" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
-      <text x="12" y="19.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#e6edf3">🛡️ Branch Protection Audit</text>
+    <!-- Pill 4 -->
+    <g transform="translate(436, 0)">
+      <rect width="144" height="28" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1" />
+      <text x="72" y="18" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="500" fill="#e6edf3">📟 CLI + Web UI</text>
     </g>
   </g>
 
-  <!-- Bottom Command Snippet Bar -->
-  <g transform="translate(290, 280)">
-    <rect width="470" height="40" rx="8" fill="#0d1117" stroke="#30363d" stroke-width="1" />
-    <text x="16" y="25" font-family="'JetBrains Mono', 'Fira Code', Consolas, monospace" font-size="13" fill="#79c0ff">$</text>
-    <text x="32" y="25" font-family="'JetBrains Mono', 'Fira Code', Consolas, monospace" font-size="13" fill="#e6edf3">python find_unprotected_repos.py</text>
-    <text x="365" y="25" font-family="'JetBrains Mono', 'Fira Code', Consolas, monospace" font-size="11.5" fill="#56d364">--fast</text>
+  <!-- Interactive Terminal Snippet Bar (Centered: width 480, starts at x = 260) -->
+  <g transform="translate(260, 270)">
+    <rect width="480" height="38" rx="8" fill="#0d1117" stroke="#30363d" stroke-width="1" />
+    <text x="20" y="24" font-family="'JetBrains Mono', 'Fira Code', Consolas, monospace" font-size="13" fill="#79c0ff">$</text>
+    <text x="36" y="24" font-family="'JetBrains Mono', 'Fira Code', Consolas, monospace" font-size="13" fill="#e6edf3">python find_unprotected_repos.py</text>
+    <text x="390" y="24" font-family="'JetBrains Mono', 'Fira Code', Consolas, monospace" font-size="11.5" fill="#56d364">--fast</text>
   </g>
 
-  <!-- ================= RIGHT: LIVE AUDIT STATUS CARDS (x: 810 - 1160) ================= -->
-  <!-- Card 1: Protected Branch (Floating 1) -->
-  <g class="floating-card-1" transform="translate(810, 62)">
-    <rect width="350" height="120" rx="10" fill="url(#card-grad-pass)" stroke="#238636" stroke-width="1.5" filter="url(#soft-glow)" />
-    <!-- Header -->
-    <circle cx="24" cy="28" r="7.5" fill="#238636" />
-    <path d="M21 28 L23.5 30.5 L27 26" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-    <text x="40" y="32.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="700" fill="#e6edf3">repo/production-api</text>
-    
-    <line x1="16" y1="48" x2="334" y2="48" stroke="#30363d" stroke-width="1" />
-    
-    <!-- Branch Details -->
-    <text x="24" y="73" font-family="'JetBrains Mono', Consolas, monospace" font-size="12.5" fill="#8b949e">branch: <tspan fill="#58a6ff">main</tspan></text>
-    <rect x="240" y="59" width="88" height="22" rx="4" fill="#238636" fill-opacity="0.25" />
-    <text x="284" y="74.5" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="700" fill="#3fb950">PROTECTED</text>
-    
-    <text x="24" y="98" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11.5" fill="#7ee787">✓ Required Reviews &amp; PR Enforced</text>
+  <!-- Ambient Floating Data Nodes -->
+  <g class="particle">
+    <circle cx="120" cy="110" r="3" fill="#58a6ff" opacity="0.6" />
+    <circle cx="150" cy="230" r="2" fill="#3fb950" opacity="0.5" />
+    <circle cx="880" cy="110" r="3" fill="#58a6ff" opacity="0.6" />
+    <circle cx="850" cy="230" r="2" fill="#3fb950" opacity="0.5" />
   </g>
-
-  <!-- Card 2: Unprotected Alert Branch (Floating 2) -->
-  <g class="floating-card-2" transform="translate(810, 208)">
-    <rect width="350" height="120" rx="10" fill="url(#card-grad-alert)" stroke="#f85149" stroke-width="1.5" filter="url(#soft-glow)" />
-    <!-- Header -->
-    <circle cx="24" cy="28" r="7.5" fill="#da3633" class="blinking-dot" />
-    <path d="M24 23.5 V28.5 M24 31.5 V32.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
-    <text x="40" y="32.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="700" fill="#e6edf3">repo/internal-tooling</text>
-    
-    <line x1="16" y1="48" x2="334" y2="48" stroke="#30363d" stroke-width="1" />
-    
-    <!-- Branch Details -->
-    <text x="24" y="73" font-family="'JetBrains Mono', Consolas, monospace" font-size="12.5" fill="#8b949e">branch: <tspan fill="#f0883e">master</tspan></text>
-    <rect x="226" y="59" width="102" height="22" rx="4" fill="#da3633" fill-opacity="0.25" />
-    <text x="277" y="74.5" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11" font-weight="700" fill="#ff7b72">UNPROTECTED</text>
-    
-    <text x="24" y="98" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11.5" fill="#ff7b72">⚠ Direct push allowed • Audit alert</text>
-  </g>
-
-  <!-- Floating Particles / Ambient Nodes -->
-  <circle cx="790" cy="45" r="3" fill="#58a6ff" opacity="0.6">
-    <animate attributeName="cy" values="45;35;45" dur="4s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite" />
-  </circle>
-  <circle cx="1175" cy="350" r="2.5" fill="#3fb950" opacity="0.5">
-    <animate attributeName="cy" values="350;360;350" dur="5s" repeatCount="indefinite" />
-    <animate attributeName="opacity" values="0.2;0.7;0.2" dur="5s" repeatCount="indefinite" />
-  </circle>
 </svg>
